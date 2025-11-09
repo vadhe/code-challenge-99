@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 import { Button } from "./components/ui/button";
 import {
@@ -21,6 +22,54 @@ import {
 } from "./components/ui/select";
 
 function App() {
+  const [coinList, setCoinList] = useState<
+    { label: string; value: string; symbol: string }[]
+  >([]);
+  const [fromCoin, setFromCoin] = useState<string>("bitcoin");
+  const [toCoin, setToCoin] = useState<string>("solana");
+  const [exchangeRate, setExchangeRate] = useState<number | null>(null);
+  const getCoinList = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL_API}/coins/markets?vs_currency=usd`,
+      {
+        headers: {
+          "x-cg-demo-api-key": "CG-jMP4Aic6NeM8dxY9pCxSyDn8",
+        },
+      }
+    );
+    const coinList = await response.json();
+    setCoinList(
+      coinList.map((coin: { name: string; id: string; symbol: string }) => ({
+        label: coin.symbol.toUpperCase(),
+        value: coin.id,
+        symbol: coin.symbol,
+      }))
+    );
+  };
+  useEffect(() => {
+    getCoinList();
+  }, []);
+  const getExchangeRate = async (fromCoin: string, toCoin: string) => {
+    const toCoinSymbol = coinList.find((coin) => coin.value === toCoin);
+    const response = await fetch(
+      `${
+        import.meta.env.VITE_BASE_URL_API
+      }/simple/price?ids=${fromCoin}&vs_currencies=${toCoinSymbol?.symbol}`,
+      {
+        headers: {
+          "x-cg-demo-api-key": "CG-jMP4Aic6NeM8dxY9pCxSyDn8",
+        },
+      }
+    );
+    const rate = await response.json();
+    setExchangeRate(rate?.[fromCoin]?.[toCoinSymbol?.symbol ?? ""] ?? null);
+  };
+  useEffect(() => {
+    if (fromCoin && toCoin && coinList.length > 0) {
+      getExchangeRate(fromCoin, toCoin);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromCoin, toCoin, coinList]);
   return (
     <>
       <div className="flex justify-center items-center h-screen flex-col gap-4">
@@ -37,18 +86,21 @@ function App() {
                 From
               </Label>
               <div className="flex gap-4">
-                <Select>
+                <Select
+                  defaultValue="bitcoin"
+                  onValueChange={(value) => setFromCoin(value)}
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a token" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Fruits</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
+                      <SelectLabel>Token List</SelectLabel>
+                      {coinList.map((coin) => (
+                        <SelectItem key={coin.value} value={coin.value}>
+                          {coin.label}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -62,9 +114,9 @@ function App() {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#737373"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-arrow-down-up-icon lucide-arrow-down-up"
                 >
                   <path d="m3 16 4 4 4-4" />
@@ -78,18 +130,21 @@ function App() {
               </Label>
 
               <div className="flex gap-4">
-                <Select>
+                <Select
+                  defaultValue="solana"
+                  onValueChange={(value) => setToCoin(value)}
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a token" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Fruits</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
+                      <SelectLabel>Token List</SelectLabel>
+                      {coinList.map((coin) => (
+                        <SelectItem key={coin.value} value={coin.value}>
+                          {coin.label}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -98,7 +153,16 @@ function App() {
             </form>
             <div className="flex justify-between border p-2 rounded-lg mt-4">
               <div className="text-muted-foreground text-sm">Exchange Rate</div>
-              <div>1 USD = 0.920000 EUR</div>
+              <div>
+                1{" "}
+                {coinList
+                  .find((coin) => coin.value === fromCoin)
+                  ?.symbol.toUpperCase()}{" "}
+                = {exchangeRate}{" "}
+                {coinList
+                  .find((coin) => coin.value === toCoin)
+                  ?.symbol.toUpperCase()}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
