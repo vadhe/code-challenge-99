@@ -1,75 +1,67 @@
-# React + TypeScript + Vite
+# Cryptocurrency Swap App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React app for swapping cryptocurrencies using real-time exchange rates from CoinGecko API.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+pnpm install
 
-## React Compiler
+# Start development server
+pnpm run dev
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+# Build for production
+pnpm run build
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run linter
+pnpm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env` file with:
 ```
+VITE_BASE_URL_API=https://api.coingecko.com/api/v3
+```
+
+## Features
+
+- Real-time cryptocurrency exchange rates
+- Swap between different cryptocurrencies
+- Loading states and error handling
+- Toast notifications for user feedback
+- Responsive design with TailwindCSS
+
+## Tech Stack
+
+- **React 19** with TypeScript
+- **Vite** for build tooling
+- **TailwindCSS** for styling
+- **Radix UI** components
+- **Sonner** for toast notifications
+- **CoinGecko API** for crypto data
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components
+│   ├── CoinSelector.tsx
+│   ├── ExchangeRateDisplay.tsx
+│   └── SwapButton.tsx
+├── hooks/              # Custom React hooks
+│   └── useSwap.ts
+├── services/           # API services
+│   └── coinApi.ts
+├── types/              # TypeScript types
+│   └── coin.ts
+└── App.tsx             # Main component
+```
+
+
+
+## Development
+
+Run `npm run dev` and open http://localhost:5173 to get started.
