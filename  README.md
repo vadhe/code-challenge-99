@@ -1,5 +1,20 @@
-https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&x_cg_demo_api_key=CG-jMP4Aic6NeM8dxY9pCxSyDn8
+# Code Challenge
 
+This repository contains solutions to coding challenges with different problem sets.
 
+## Problems
 
-https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=eth&x_cg_demo_api_key=CG-jMP4Aic6NeM8dxY9pCxSyDn8
+### Problem 1 - Algorithm Implementation
+TypeScript implementation of sum algorithms using different approaches.
+
+**Location**: `src/problem-1/`
+
+### Problem 2 - React Cryptocurrency Swap
+Modern React application with TypeScript for cryptocurrency exchange functionality.
+
+**Location**: `src/problem-2/`
+
+### Problem 3 - Code Review & Refactoring
+React component analysis focusing on computational inefficiencies and anti-patterns.
+
+**Location**: `src/problem-3/`
